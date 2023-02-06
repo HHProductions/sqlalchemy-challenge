@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
 
 from flask import Flask, jsonify
-
+import datetime as dt
 
 # Database Setup
 engine = create_engine("sqlite:///Resources/hawaii.sqlite")
@@ -33,8 +33,11 @@ def welcome():
         f"Available Routes:<br/>"
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations"
+        f"/api/v1.0/stations/api/v1.0/tobs"
+        f"/api/v1.0/stations/api/v1.0/<start>"
+        f"/api/v1.0/stations/api/v1.0/<start>/<end>"
     )
-
+##############
 
 @app.route("/api/v1.0/precipitation")
 def precipitation():
@@ -59,15 +62,16 @@ def precipitation():
 
     return jsonify(all_prcp)
 
+##############
 
 @app.route("/api/v1.0/stations")
-def passengers():
+def station_name():
     # Create our session (link) from Python to the DB
     session = Session(engine)
 
     """Return a list stations"""
     # Query all stations
-    results = session.query(Station.station, Station.Name).all()
+    results = session.query(Station.station, Station.name).all()
 
     session.close()
 
@@ -81,11 +85,26 @@ def passengers():
 
     return jsonify(all_stations)
 
+##############
+
+@app.route("/api/v1.0/tobs")
+def temperature():
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
+
+    """Return a list temperatures"""
+    # Query all temperatures for station USC00519281
+    year_ago = dt.date(2017,8,23) - dt.timedelta(days=365)
+    results = session.query(Measurement.date, Measurement.tobs).\
+        filter(Measurement.date >= year_ago).\
+        filter(Measurement.station == "USC00519281").all()
+
+    session.close()
     # Create a dictionary from the row data and append to a list of temperature data
     all_temperature = []
-    for date, temp in results:
+    for date, tobs in results:
         temp_dict = {}
-        temp_dict["date"] = station
+        temp_dict["date"] = date
         temp_dict["tobs"] = tobs
         all_temperature.append(temp_dict)
 
