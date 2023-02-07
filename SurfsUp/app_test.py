@@ -123,28 +123,28 @@ def temp_stats():
     # Query all temperatures for station USC00519281
 
     min_temp = session.query(Measurement.date, func.min(Measurement.tobs)).\
-        filter(Measurement.date>=2016-8-23).\
             filter(Measurement.station == "USC00519281").all()
-    max_temp = session.query(Measurement.date, func.max(Measurement.tobs)).\
-        filter(Measurement.station == "USC00519281").all()
-    avg_temp = session.query(Measurement.date, func.avg(Measurement.tobs)).\
-        filter(Measurement.station == "USC00519281").all()
-
+    # max_temp = session.query(func.max(Measurement.tobs)).\
+    #     filter(Measurement.station == "USC00519281").all()
+    # avg_temp = session.query(func.avg(Measurement.tobs)).\
+    #     filter(Measurement.station == "USC00519281").all()
+        # filter(Measurement.date>="2016-08-23").\
 
 
     session.close()
-    # Create a dictionary from the row data and append to a list of temperature data
-    min_max_avg = []
-    temp_stat = {}
-    temp_stat["min"] = min_temp
-    temp_stat["max"] = max_temp
-    temp_stat["avg"] = avg_temp
-    min_max_avg.append(temp_stat)
-    # temp = list(np.ravel(temp_stat))
-    # return jsonify(temp)    
-    temp = np.array(min_max_avg).tolist()
-    return jsonify(temp) 
-    # return jsonify(min_max_avg)
+    # # Create a dictionary from the row data and append to a list of temperature data
+    # min_max_avg = []
+    # temp_stat = {}
+    # for date, tobs in min_temp:
+    #     temp_stat["date"] = date
+    #     temp_stat["temp"] = min_temp
+    #     min_max_avg.append(temp_stat)
+    # temp_stat["temp"] = max_temp
+    # min_max_avg.append(temp_stat)
+    # temp_stat["temp"] = avg_temp
+    # min_max_avg.append(temp_stat)
+
+    return jsonify(min_temp)
 
 
 
