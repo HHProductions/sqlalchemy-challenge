@@ -114,10 +114,9 @@ def temperature():
 
 ##############
 
-@app.route("/api/v1.0/<start>")
-def temp_stats(start):
+@app.route("/api/v1.0/2016-08-23")
+def temp_stats():
     # Create our session (link) from Python to the DB
-
     session = Session(engine)
 
     """Return a stats on temperatures"""
@@ -134,13 +133,13 @@ def temp_stats(start):
 #     # Query all temperatures for station USC00519281
     
     results1 = session.query(Measurement.date, func.min(Measurement.tobs)).\
-    filter(Measurement.date >= start).\
+    filter(Measurement.date >= "2016-08-23").\
     filter(Measurement.station == "USC00519281").all()
     results2 = session.query(Measurement.date, func.max(Measurement.tobs)).\
-    filter(Measurement.date >= start).\
+    filter(Measurement.date >= "2016-08-23").\
     filter(Measurement.station == "USC00519281").all()
     results3 = session.query(Measurement.date, func.avg(Measurement.tobs)).\
-    filter(Measurement.date >= start).\
+    filter(Measurement.date >= "2016-08-23").\
     filter(Measurement.station == "USC00519281").all()
 # filter(Measurement.date >= year_ago).\
 #         filter(Measurement.station == "USC00519281").all()
@@ -148,64 +147,18 @@ def temp_stats(start):
      # Create a dictionary from the row data and append to a list of temperature data
     
     for date, tobs in results1:
-        min_dict["TMIN"] = tobs
+        min_dict["min_temp"] = tobs
         temp_stat.append(min_dict)
     for date, tobs in results2:
-        max_dict["TMAX"] = tobs
+        max_dict["max_temp"] = tobs
         temp_stat.append(max_dict)
     for date, tobs in results3:
-        avg_dict["TAVG"] = tobs
+        avg_dict["avg_temp"] = tobs
         temp_stat.append(avg_dict)
 
     return jsonify(temp_stat)
 
-@app.route("/api/v1.0/<start><end>")
-def temp_stats1(start,end):
-    # Create our session (link) from Python to the DB
 
-    session = Session(engine)
-
-    """Return a stats on temperatures"""
-    # Query all temperatures for station USC00519281
-    # define list and dictionaries for data capture
-    temp_stat1 = []
-    min_dict1 = {}
-    max_dict1 = {}
-    avg_dict1 = {}
-    session = Session(engine)
-    
-
-#     """Return a list temperatures"""
-#     # Query all temperatures for station USC00519281
-    
-    results1 = session.query(Measurement.date, func.min(Measurement.tobs)).\
-    filter(Measurement.date >= start).\
-    filter(Measurement.date <= end).\
-    filter(Measurement.station == "USC00519281").all()
-    results2 = session.query(Measurement.date, func.max(Measurement.tobs)).\
-    filter(Measurement.date >= start).\
-    filter(Measurement.date <= end).\
-    filter(Measurement.station == "USC00519281").all()
-    results3 = session.query(Measurement.date, func.avg(Measurement.tobs)).\
-    filter(Measurement.date >= start).\
-    filter(Measurement.date <= end).\
-    filter(Measurement.station == "USC00519281").all()
-# filter(Measurement.date >= year_ago).\
-#         filter(Measurement.station == "USC00519281").all()
-    session.close()
-     # Create a dictionary from the row data and append to a list of temperature data
-    
-    for date, tobs in results1:
-        min_dict1["TMIN"] = tobs
-        temp_stat1.append(min_dict1)
-    for date, tobs in results2:
-        max_dict1["TMAX"] = tobs
-        temp_stat1.append(max_dict1)
-    for date, tobs in results3:
-        avg_dict1["TAVG"] = tobs
-        temp_stat1.append(avg_dict1)
-
-    return jsonify(temp_stat1)
 
 
 
