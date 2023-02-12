@@ -32,11 +32,15 @@ def welcome():
     return (
         f"Available Routes:<br/>"
         f"/api/v1.0/precipitation<br/>"
-        f"/api/v1.0/stations"
-        f"/api/v1.0/stations/api/v1.0/tobs"
-        f"/api/v1.0/stations/api/v1.0/<start>"
-        f"/api/v1.0/stations/api/v1.0/<start>/<end>"
+        f"/api/v1.0/stations<br/>"
+        f"/api/v1.0/stations/api/v1.0/tobs<br/>"
+        f"/api/v1.0/stations/api/v1.0/start<br/>"
+        f"/api/v1.0/stations/api/v1.0/start&end<br/>"
+        f"<br/>"
+        f"For start and end please use yyyy-mm-dd format and ensure they are separated by &."
+
     )
+    
 ##############
 
 @app.route("/api/v1.0/precipitation")
@@ -159,7 +163,7 @@ def temp_stats(start):
 
     return jsonify(temp_stat)
 
-@app.route("/api/v1.0/<start><end>")
+@app.route("/api/v1.0/<start>&<end>")
 def temp_stats1(start,end):
     # Create our session (link) from Python to the DB
 
